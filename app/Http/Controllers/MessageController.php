@@ -28,14 +28,12 @@ class MessageController extends Controller
         return json_encode($messages);
     }
 
-    public function store(Request $request){
+    public function store(MessageRequest $request){
 
         Message::query()->create([
             "message" => $request->message,
             "user_id_received_message" => $request->id,
             "user_id_sent_message" => auth()->user()->id
         ]);
-
-        return redirect(route('open-chat', [$request->id]));
     }
 }

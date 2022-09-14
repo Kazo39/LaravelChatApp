@@ -3,7 +3,7 @@
 
 @section('additional_styles')
     <style>
-        .image{
+        .image {
             height: 50px;
             width: 50px;
         }
@@ -18,9 +18,9 @@
                     <div class="card-header" >Vase poruke sa {{$friend->first_name.' '.$friend->last_name}}</div>
 
                     <div class="card-body" >
-                        <div class="container " id="chat"></div>
-                        <div class="container" >
-                            <form method="POST"  id="messageForm" action="{{route('send-message')}}">
+                        <div class="container chat" id="chat"></div>
+                        <div class="container">
+                            <form method="POST"  id="messageForm" >
                                 @CSRF
                                 <div class="row mt-2">
                                     <div class="col-12">
@@ -40,6 +40,8 @@
 
 @section('additional_scripts')
     <script>
+
+
         async function messages(id = {{$friend->id}}){
             let response = await fetch('{{route('show-messages', [$friend->id])}}');
             let responseJSON = await response.json();
@@ -85,6 +87,19 @@
             chatDiv.innerHTML = chat;
             setTimeout(messages, 2000);
         }
+
+        const form = document.getElementById('messageForm') ;
+            form.addEventListener('submit',  async function (event){
+            event.preventDefault();
+            const formData = new FormData(form);
+            await fetch('http://127.0.0.1:8000/send-message', {
+                method: 'POST',
+                body: formData
+            })
+                await messages()
+                document.getElementById('message').value = '';
+
+        })
 
         messages()
     </script>
